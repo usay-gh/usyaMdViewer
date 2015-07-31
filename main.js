@@ -47,20 +47,26 @@ app.on('ready', function() {
   if(mdFilePath === undefined) {
     // error
     dialog.showErrorBox("Error", "please specify a markdown file.");
+    app.exit();
   }
   
   // reading markdonw file
+  if(!fs.existsSync(mdFilePath)) {
+    // error
+    dialog.showErrorBox("Error", "specified file is not exists. " + mdFilePath);
+    app.exit();
+  }
   var mdText = fs.readFileSync(mdFilePath, "utf-8");
 
   var mdHtml = markdown.Markdown(mdText);
 
   // reading html template file
-  var templateText = fs.readFileSync('./index.html.template', "utf-8");
+  var templateText = fs.readFileSync(__dirname + '/index.html.template', "utf-8");
   // replace keywords 
   templateText = templateText.replace(/__TITLE__/g, mdFilePath);
   templateText = templateText.replace(/__BODY__/g, mdHtml);
   // writee temporary file
-  fs.writeFileSync('./tmp.html', templateText);
+  fs.writeFileSync(__dirname + '/tmp.html', templateText);
 
   
   // and load the index.html of the app.

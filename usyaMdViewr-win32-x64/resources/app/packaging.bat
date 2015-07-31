@@ -1,0 +1,1 @@
+electron-packager . usyaMdViewr --platform=win32 --version=0.30.1 --arch=x64 --overwrite
