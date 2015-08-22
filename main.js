@@ -94,9 +94,6 @@ function loadMdFile(mdFilePath) {
     app.exit();
   }
 
-  
-  console.log("mdFilePath =" + mdFilePath);
-
   var mdText = fs.readFileSync(mdFilePath, "utf-8");
 
 
