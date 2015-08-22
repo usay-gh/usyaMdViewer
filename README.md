@@ -12,3 +12,5 @@ usyaMdViewr is only viewer for simple Markdown file.
  
  electron . filename
  
+ 2015 usya   
+テスト文字列です

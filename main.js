@@ -1,3 +1,10 @@
+
+try {
+  var remote = require('remote');
+} catch (error) {
+  console.log(error);
+}
+
 var app = require('app');  // Module to control application life.
 var fs = require('fs');
 var dialog = require('dialog');
@@ -30,19 +37,23 @@ app.on('ready', function() {
     height: height,
     transparent: false,
     frame: true,    
-    });
-
+  })
+    
+   
+    
   //=================================================================
  
  // getting markdown file name from ARGV
   var mdFilePath = undefined;
   if(process.argv[1] == '.' ) {
     // electron debugging
+    // ex. # electron . test.md --debug=5858 
      mdFilePath = process.argv[2];
   } else {
     // built module
     mdFilePath = process.argv[1];
   }
+
 
   if(mdFilePath === undefined) {
     // error
@@ -50,27 +61,10 @@ app.on('ready', function() {
     app.exit();
   }
   
-  // reading markdonw file
-  if(!fs.existsSync(mdFilePath)) {
-    // error
-    dialog.showErrorBox("Error", "specified file is not exists. " + mdFilePath);
-    app.exit();
-  }
-  var mdText = fs.readFileSync(mdFilePath, "utf-8");
-
-  var mdHtml = markdown.Markdown(mdText);
-
-  // reading html template file
-  var templateText = fs.readFileSync(__dirname + '/index.html.template', "utf-8");
-  // replace keywords 
-  templateText = templateText.replace(/__TITLE__/g, mdFilePath);
-  templateText = templateText.replace(/__BODY__/g, mdHtml);
-  // writee temporary file
-  fs.writeFileSync(__dirname + '/tmp.html', templateText);
-
   
-  // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/tmp.html');
+  loadMdFile(mdFilePath);
+  
+
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -92,3 +86,31 @@ app.on('ready', function() {
   });
 });
 
+function loadMdFile(mdFilePath) {
+    // reading markdonw file
+  if(!fs.existsSync(mdFilePath)) {
+    // error
+    dialog.showErrorBox("Error", "specified file is not exists. " + mdFilePath);
+    app.exit();
+  }
+
+  
+  console.log("mdFilePath =" + mdFilePath);
+
+  var mdText = fs.readFileSync(mdFilePath, "utf-8");
+
+
+  var mdHtml = markdown.Markdown(mdText);
+
+  // reading html template file
+  var templateText = fs.readFileSync(__dirname + '/index.html.template', "utf-8");
+  // replace keywords 
+  templateText = templateText.replace(/__TITLE__/g, mdFilePath);
+  templateText = templateText.replace(/__BODY__/g, mdHtml);
+  // writee temporary file
+  fs.writeFileSync(__dirname + '/tmp.html', templateText);
+
+  
+  // and load the index.html of the app.
+  mainWindow.loadUrl('file://' + __dirname + '/tmp.html');
+}

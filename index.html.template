@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>__TITLE__</title>
+    <script type="text/javascript" src="index.js"> </script>
   </head>
   <body>
     __BODY__
   </body>
 </html>
-
